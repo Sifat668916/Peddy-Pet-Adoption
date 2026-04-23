@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Peddy - Pet Adoption Platform</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="https://img.icons8.com/color/48/dog.png" />
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap');
+      body { font-family: 'Inter', sans-serif; }
+      .bento-box { @apply bg-white border border-slate-200 rounded-[2.5rem] shadow-sm; }
+    </style>
+  </head>
+  <body class="bg-slate-50 text-slate-900 min-h-screen">
+    
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-40 bg-white border-b border-slate-200 h-16">
+      <div class="container mx-auto px-8 h-full flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <div class="w-10 h-10 bg-teal-600 rounded-xl flex items-center justify-center text-white shadow-sm">
+            <i class="fa-solid fa-paw text-lg"></i>
+          </div>
+          <span class="text-xl font-bold tracking-tight text-teal-800">Peddy</span>
+        </div>
+
+        <div class="hidden md:flex items-center gap-10 text-sm font-medium text-slate-500">
+          <a href="#" class="text-teal-600 hover:text-teal-700">Home</a>
+          <a href="#" class="hover:text-slate-900">Shop</a>
+          <a href="#" class="hover:text-slate-900">Contact</a>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <div class="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-slate-50 cursor-pointer">
+            <i class="fa-regular fa-user"></i>
+          </div>
+          <button id="mobile-menu-btn" class="md:hidden p-2 text-slate-500">
+            <i class="fa-solid fa-bars text-xl"></i>
+          </button>
+        </div>
+      </div>
+      <!-- Mobile Menu -->
+      <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-slate-200 transition-all">
+        <div class="flex flex-col p-6 gap-4 text-sm font-medium text-slate-500">
+          <a href="#" class="py-2 text-teal-600">Home</a>
+          <a href="#" class="py-2 hover:text-slate-900">Shop</a>
+          <a href="#" class="py-2 hover:text-slate-900">Contact</a>
+        </div>
+      </div>
+    </nav>
+
+    <main class="container mx-auto px-8 py-8 flex flex-col gap-6">
+      <!-- Banner -->
+      <header class="relative bg-white border border-slate-200 rounded-[2.5rem] p-10 md:p-14 flex flex-col md:flex-row items-center justify-between overflow-hidden">
+        <div class="relative z-10 max-w-xl text-center md:text-left">
+          <h1 class="text-4xl md:text-5xl font-black text-slate-900 mb-4 leading-tight tracking-tight">Adopt Your Best Friend</h1>
+          <p class="text-slate-500 text-lg leading-relaxed mb-8">Find your perfect companion among hundreds of vetted pets waiting for a forever home. Bringing families together, one paw at a time.</p>
+          <button onclick="scrollToAdopt()" class="px-8 py-3 bg-teal-600 text-white rounded-full text-base font-bold hover:bg-teal-700 shadow-lg shadow-teal-600/10 transform active:scale-95 transition-all">View More</button>
+        </div>
+        <div class="mt-12 md:mt-0 relative">
+          <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-teal-50 rounded-full blur-3xl opacity-50 -z-10"></div>
+          <img src="pet.webp" alt="Hero" class="w-full max-w-md relative z-10 drop-shadow-2xl">
+        </div>
+      </header>
+
+      <!-- Adoption Section -->
+      <div id="adopt-section" class="flex flex-col gap-6 scroll-mt-24">
+        <!-- Categories Row -->
+        <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center bg-white p-4 lg:p-6 border border-slate-200 rounded-[2rem] gap-4">
+          <div id="category-container" class="flex flex-wrap gap-3">
+            <!-- Dynamic Categories -->
+          </div>
+          <button onclick="handleSort()" class="w-full lg:w-auto px-8 py-3 bg-teal-600 text-white rounded-xl font-bold shadow-lg shadow-teal-600/20 active:scale-95 transition-all text-sm">Sort By Price</button>
+        </div>
+
+        <div class="grid grid-cols-12 gap-6 items-start">
+          <!-- Main Content -->
+          <div class="col-span-12 lg:col-span-9 flex flex-col gap-6">
+            <!-- Loading -->
+            <div id="loading-spinner" class="hidden bg-white border border-slate-200 rounded-[2.5rem] p-24 flex flex-col items-center justify-center text-slate-300">
+              <i class="fa-solid fa-spinner fa-spin text-5xl"></i>
+              <p class="mt-4 text-slate-400 font-medium">Searching the Shelter...</p>
+            </div>
+            <!-- Empty State -->
+            <div id="empty-state" class="hidden bg-white border border-slate-200 rounded-[2.5rem] p-20 text-center">
+              <img src="https://i.ibb.co/0M7VvGf/error.webp" class="w-40 mx-auto mb-8 opacity-80">
+              <h3 class="text-2xl font-black text-slate-900 mb-2">No Information Available</h3>
+              <p class="text-slate-400 max-w-sm mx-auto">Check back with us later!</p>
+            </div>
+            <!-- Pets Grid -->
+            <div id="pets-container" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+              <!-- Dynamic Pets -->
+            </div>
+          </div>
+
+          <!-- Sidebar -->
+          <div class="col-span-12 lg:col-span-3">
+            <div class="sticky top-24 bg-white border border-slate-200 rounded-[2.5rem] p-6 flex flex-col min-h-[400px] shadow-sm">
+              <h2 class="font-bold text-slate-800 border-b border-slate-100 pb-4 mb-5 flex items-center justify-between">
+                Liked Pets 
+                <span id="liked-count" class="text-xs bg-teal-100 text-teal-700 px-2.5 py-1 rounded-full font-bold">0</span>
+              </h2>
+              <div id="liked-pets-grid" class="grid grid-cols-2 gap-3">
+                <div class="empty-msg col-span-2 flex flex-col items-center justify-center p-4 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
+                   <p class="text-[11px] text-slate-400 text-center leading-relaxed">Click heart on pets to see them here!</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <footer class="mt-12 mb-8 bg-[#131313] text-slate-400 rounded-[2.5rem] p-10 md:p-16 relative overflow-hidden">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-12 relative z-10">
+          <div class="col-span-1 md:col-span-2">
+            <div class="flex items-center gap-2 mb-6">
+              <div class="w-8 h-8 bg-teal-600 rounded-lg flex items-center justify-center text-white"><i class="fa-solid fa-paw"></i></div>
+              <span class="text-xl font-bold tracking-tight text-white">Peddy</span>
+            </div>
+            <p class="text-sm max-w-sm mb-6 leading-relaxed">Connecting loving families with their perfect pet companions. We believe every animal deserves a place to call home.</p>
+            <p class="text-xs uppercase tracking-widest font-semibold flex items-center gap-2"><span class="w-8 h-px bg-slate-700"></span> &copy; 2026 Peddy Platforms</p>
+          </div>
+          <div>
+            <h4 class="text-white font-bold mb-6 text-sm">RESOURCES</h4>
+            <ul class="text-xs space-y-4 font-medium uppercase tracking-wider">
+              <li><a href="#" class="hover:text-teal-500 transition-colors">Foundation</a></li>
+              <li><a href="#" class="hover:text-teal-500 transition-colors">Adoption FAQ</a></li>
+              <li><a href="#" class="hover:text-teal-500 transition-colors">Privacy Policy</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="text-white font-bold mb-6 text-sm">COMMUNITY</h4>
+            <ul class="text-xs space-y-4 font-medium uppercase tracking-wider">
+              <li><a href="#" class="hover:text-teal-500 transition-colors">Instagram</a></li>
+              <li><a href="#" class="hover:text-teal-500 transition-colors">Volunteer</a></li>
+              <li><a href="#" class="text-teal-600 font-bold">Newsletter</a></li>
+            </ul>
+          </div>
+        </div>
+      </footer>
+    </main>
+
+    <!-- Details Modal -->
+    <div id="details_modal" class="hidden fixed inset-0 z-50 items-center justify-center p-4">
+      <div onclick="closeDetails()" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
+      <div class="relative w-full max-w-2xl bg-white rounded-[2.5rem] p-8 md:p-10 shadow-2xl max-h-[90vh] overflow-y-auto">
+        <button onclick="closeDetails()" class="absolute top-6 right-6 w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-slate-100 transition-colors">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div id="modal-content"></div>
+        <div class="mt-10">
+          <button onclick="closeDetails()" class="w-full py-4 bg-slate-900 text-white rounded-2xl font-bold hover:bg-slate-800 transition-all active:scale-[0.98]">Close Information</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Adopt Countdown Modal -->
+    <div id="adopt_modal" class="hidden fixed inset-0 z-[60] items-center justify-center p-4">
+      <div class="absolute inset-0 bg-teal-900/40 backdrop-blur-md"></div>
+      <div class="relative w-full max-w-sm bg-white rounded-[3rem] p-12 text-center shadow-2xl border border-white">
+        <div class="w-24 h-24 bg-teal-50 rounded-full flex items-center justify-center mx-auto mb-8 text-teal-600">
+          <i class="fa-solid fa-heart text-5xl animate-pulse"></i>
+        </div>
+        <h3 class="text-4xl font-black text-slate-900 mb-2">Congrats!</h3>
+        <p class="text-slate-500 font-medium mb-10 leading-relaxed">Starting adoption for<br />your new companion</p>
+        <div id="countdown-number" class="text-9xl font-black text-teal-600 tabular-nums">3</div>
+      </div>
+    </div>
+
+    <script src="src/script.js"></script>
+  </body>
+</html>
+
+
